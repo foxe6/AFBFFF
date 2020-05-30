@@ -9,17 +9,18 @@ __ALL__ = ["AnonFiles", "BayFiles", "ForumFiles"]
 class BaseFiles(object):
     url = ""
 
-    def __init__(self, db: str, token: str = "") -> None:
+    def __init__(self, db: str, _depth: int = 0, token: str = "") -> None:
         if type(self) is BaseFiles:
             raise Exception(type(self).__name__+" is an abstract class")
         self.url += f"?token="+token if token else ""
         self.db = db
+        self._depth = _depth
 
     def upload(self, filename: str) -> dict:
         issued = int(time.time())
         response = None
         try:
-            print(f"[Uploading] {filename} ==> {self.url}", flush=True, end="")
+            print(" "*self._depth*4+f"[Uploading] {filename} ==> {self.url}", flush=True, end="")
             response = requests.post(self.url, files={"file": open(filename, "rb")}).json()
             return response
         except Exception as e:
@@ -36,26 +37,17 @@ class BaseFiles(object):
                 sqlqueue.sql(sql, data)
                 sqlqueue.commit()
                 sqlqueue.stop()
-                print(f"\r[Uploaded] {filename} ==> {url_short}", flush=True)
+                print(" "*self._depth*4+f"\r[Uploaded] {filename} ==> {url_short}", flush=True)
 
 
 class AnonFiles(BaseFiles):
     url = "https://api.anonfiles.com/upload"
 
-    def __init__(self, db: str, token: str = "") -> None:
-        super().__init__(db, token)
-
 
 class BayFiles(BaseFiles):
     url = "https://api.bayfiles.com/upload"
 
-    def __init__(self, db: str, token: str = "") -> None:
-        super().__init__(db, token)
-
 
 class ForumFiles(BaseFiles):
     url = "https://api.forumfiles.com/upload"
-
-    def __init__(self, db: str) -> None:
-        super().__init__(db)
 
