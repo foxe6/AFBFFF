@@ -18,21 +18,22 @@ class BaseFiles(object):
         issued = int(time.time())
         response = None
         try:
-            try:
-                response = requests.post(self.url, files={"file": open(filename, "rb")}).json()
-                return response
-            except Exception as e:
-                raise e
+            response = requests.post(self.url, files={"file": open(filename, "rb")}).json()
+            return response
+        except Exception as e:
+            raise e
         finally:
-            uploaded = int(time.time())
-            sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100, depth=int(depth))
-            sql = '''CREATE TABLE IF NOT EXISTS "history" ("url" TEXT, "path" TEXT, "issued" INTEGER, "uploaded" INTEGER);'''
-            sqlqueue.sql(sql)
-            sql = '''INSERT INTO history VALUES (?, ?, ?, ?);'''
-            data = (response["data"]["file"]["url"]["short"], filename, issued, uploaded)
-            sqlqueue.sql(sql, data)
-            sqlqueue.commit()
-            sqlqueue.stop()
+            if response is not None:
+                uploaded = int(time.time())
+                sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100, depth=int(depth))
+                sql = '''CREATE TABLE IF NOT EXISTS "history" ("url" TEXT, "path" TEXT, "issued" INTEGER, "uploaded" INTEGER);'''
+                sqlqueue.sql(sql)
+                sql = '''INSERT INTO history VALUES (?, ?, ?, ?);'''
+                data = (response["data"]["file"]["url"]["short"], filename, issued, uploaded)
+                sqlqueue.sql(sql, data)
+                sqlqueue.commit()
+                sqlqueue.stop()
+                print(f"[Uploaded] {filename} ==> {self.url}", flush=True)
 
 
 class AnonFiles(BaseFiles):
