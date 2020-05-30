@@ -14,7 +14,7 @@ class BaseFiles(object):
             raise Exception(type(self).__name__+" is an abstract class")
         self.url += f"?token="+token if token else ""
 
-    def upload(self, filename: str) -> dict:
+    def upload(self, filename: str, depth: int = 3) -> dict:
         issued = int(time.time())
         response = None
         try:
@@ -25,7 +25,7 @@ class BaseFiles(object):
                 raise e
         finally:
             uploaded = int(time.time())
-            sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100, depth=3)
+            sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100, depth=int(depth))
             sql = '''CREATE TABLE IF NOT EXISTS "history" ("url" TEXT, "path" TEXT, "issued" INTEGER, "uploaded" INTEGER);'''
             sqlqueue.sql(sql)
             sql = '''INSERT INTO history VALUES (?, ?, ?, ?);'''
