@@ -29,11 +29,12 @@ class BaseFiles(object):
                 sql = '''CREATE TABLE IF NOT EXISTS "history" ("url" TEXT, "path" TEXT, "issued" INTEGER, "uploaded" INTEGER);'''
                 sqlqueue.sql(sql)
                 sql = '''INSERT INTO history VALUES (?, ?, ?, ?);'''
-                data = (response["data"]["file"]["url"]["short"], filename, issued, uploaded)
+                url_short = response["data"]["file"]["url"]["short"]
+                data = (url_short, filename, issued, uploaded)
                 sqlqueue.sql(sql, data)
                 sqlqueue.commit()
                 sqlqueue.stop()
-                print(f"[Uploaded] {filename} ==> {self.url}", flush=True)
+                print(f"[Uploaded] {filename} ==> {url_short}", flush=True)
 
 
 class AnonFiles(BaseFiles):

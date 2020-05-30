@@ -17,28 +17,29 @@ class AFBFFF(object):
             temp_dir = os.environ["TEMP"]
         if not os.path.isabs(item):
             item = join_path(abs_main_dir(2), item)
-        if os.path.isfile(item):
+        if os.path.isfile(item) and not split:
             try:
-                if not split:
-                    if not mirror:
-                        globals()[host]().upload(filename=item, depth=int(depth))
-                    else:
-                        AnonFiles().upload(filename=item, depth=int(depth))
-                        BayFiles().upload(filename=item, depth=int(depth))
-                        ForumFiles().upload(filename=item, depth=int(depth))
+                if not mirror:
+                    globals()[host]().upload(filename=item, depth=int(depth))
                 else:
-                    basename = os.path.basename(item)+".zip"
-                    temp = randstr(2**3)+"_"+str(int(time.time()))
-                    dest = join_path(temp_dir, temp, basename)
-                    cmd = [_7z_exe, "a", "-tzip", f"-v{split_size}k", "-mx=0", dest, item]
-                    p(cmd)
-                    process = subprocess.Popen(cmd)
-                    process.communicate()
-                    for file in os.listdir(join_path(temp_dir, temp)):
-                        AFBFFF(join_path(temp_dir, temp, file), host=host, mirror=mirror, depth=depth+1)
+                    AnonFiles().upload(filename=item, depth=int(depth))
+                    BayFiles().upload(filename=item, depth=int(depth))
+                    ForumFiles().upload(filename=item, depth=int(depth))
             except Exception as e:
                 p(e, f"{item} failed to upload")
-        elif os.path.isdir(item):
-            pass
+        else:
+            basename = os.path.basename(item)+".zip"
+            temp = randstr(2 ** 3)+"_"+str(int(time.time()))
+            dest = join_path(temp_dir, temp, basename)
+            cmd = [_7z_exe, "a", "-tzip", f"-v{split_size}k", "-mx=0", dest, item]
+            if os.path.isdir(item):
+                cmd.append("-r")
+            p(cmd)
+            process = subprocess.Popen(cmd)
+            process.communicate()
+            files = [join_path(temp_dir, temp, file) for file in os.listdir(join_path(temp_dir, temp))]
+            for file in files:
+                AFBFFF(file, host=host, mirror=mirror, depth=depth+1)
+
 
 
