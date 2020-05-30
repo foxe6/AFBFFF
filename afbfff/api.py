@@ -18,6 +18,7 @@ class BaseFiles(object):
         issued = int(time.time())
         response = None
         try:
+            print(f"[Uploading] {filename} ==> {self.url}", flush=True, end="")
             response = requests.post(self.url, files={"file": open(filename, "rb")}).json()
             return response
         except Exception as e:
@@ -34,7 +35,7 @@ class BaseFiles(object):
                 sqlqueue.sql(sql, data)
                 sqlqueue.commit()
                 sqlqueue.stop()
-                print(f"[Uploaded] {filename} ==> {url_short}", flush=True)
+                print(f"\r[Uploaded] {filename} ==> {url_short}", flush=True)
 
 
 class AnonFiles(BaseFiles):

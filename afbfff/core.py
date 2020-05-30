@@ -34,10 +34,11 @@ class AFBFFF(object):
             cmd = [_7z_exe, "a", "-tzip", f"-v{split_size}k", "-mx=0", dest, item]
             if os.path.isdir(item):
                 cmd.append("-r")
-            p(cmd)
+            p(f"[Zipping] {item}", cmd)
             process = subprocess.Popen(cmd)
             process.communicate()
             files = [join_path(temp_dir, temp, file) for file in os.listdir(join_path(temp_dir, temp))]
+            p(f"[Zipped] {item} has {len(files)} parts")
             for file in files:
                 AFBFFF(file, host=host, mirror=mirror, depth=depth+1)
 
