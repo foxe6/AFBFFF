@@ -29,8 +29,8 @@ class AFBFFF(object):
                     basename = os.path.basename(item)+".zip"
                     temp = randstr(2**3)+"_"+str(int(time.time()))
                     dest = join_path(temp_dir, temp, basename)
-                    cmd = f'''{_7z_exe} a -tzip -v{split_size}k -mx=0 {dest} "{item}"'''
-                    subprocess.run(cmd, shell=True)
+                    cmd = f'''"{_7z_exe}" a -tzip -v{split_size}k -mx=0 "{dest}" "{item}"'''
+                    subprocess.run(cmd, shell=True, stdout=None, stderr=None)
                     for file in os.listdir(temp_dir):
                         if file.startswith(basename):
                             AFBFFF(join_path(temp_dir, file))
