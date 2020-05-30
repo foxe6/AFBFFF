@@ -9,12 +9,13 @@ __ALL__ = ["AnonFiles", "BayFiles", "ForumFiles"]
 class BaseFiles(object):
     url = ""
 
-    def __init__(self, token: str = "") -> None:
+    def __init__(self, db: str, token: str = "") -> None:
         if type(self) is BaseFiles:
             raise Exception(type(self).__name__+" is an abstract class")
         self.url += f"?token="+token if token else ""
+        self.db = db
 
-    def upload(self, filename: str, depth: int = 3) -> dict:
+    def upload(self, filename: str) -> dict:
         issued = int(time.time())
         response = None
         try:
@@ -26,7 +27,7 @@ class BaseFiles(object):
         finally:
             if response is not None:
                 uploaded = int(time.time())
-                sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100, depth=int(depth))
+                sqlqueue = sqlq.SqlQueue(server=True, db=self.db, timeout_commit=100)
                 sql = '''CREATE TABLE IF NOT EXISTS "history" ("url" TEXT, "path" TEXT, "issued" INTEGER, "uploaded" INTEGER);'''
                 sqlqueue.sql(sql)
                 sql = '''INSERT INTO history VALUES (?, ?, ?, ?);'''
@@ -41,20 +42,20 @@ class BaseFiles(object):
 class AnonFiles(BaseFiles):
     url = "https://api.anonfiles.com/upload"
 
-    def __init__(self, token: str = "") -> None:
-        super().__init__(token)
+    def __init__(self, db: str, token: str = "") -> None:
+        super().__init__(db, token)
 
 
 class BayFiles(BaseFiles):
     url = "https://api.bayfiles.com/upload"
 
-    def __init__(self, token: str = "") -> None:
-        super().__init__(token)
+    def __init__(self, db: str, token: str = "") -> None:
+        super().__init__(db, token)
 
 
 class ForumFiles(BaseFiles):
     url = "https://api.forumfiles.com/upload"
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, db: str) -> None:
+        super().__init__(db)
 

@@ -6,8 +6,11 @@ import os
 import subprocess
 
 
+__ALL__ = ["AFBFFF"]
+
+
 class AFBFFF(object):
-    def __init__(self, item: str,
+    def __init__(self, item: str, db: str,
                  split: bool = False, split_size: int = 1024*4000,
                  host: str = "AnonFiles", mirror: bool = False,
                  _7z_exe: str = r"C:\Program Files\7-Zip\7z.exe",
@@ -15,16 +18,18 @@ class AFBFFF(object):
                  depth: int = 4):
         if not temp_dir:
             temp_dir = os.environ["TEMP"]
+        if not os.path.isabs(db):
+            db = join_path(abs_main_dir(2), db)
         if not os.path.isabs(item):
             item = join_path(abs_main_dir(2), item)
         if os.path.isfile(item) and not split:
             try:
                 if not mirror:
-                    globals()[host]().upload(filename=item, depth=int(depth))
+                    globals()[host](db).upload(filename=item)
                 else:
-                    AnonFiles().upload(filename=item, depth=int(depth))
-                    BayFiles().upload(filename=item, depth=int(depth))
-                    ForumFiles().upload(filename=item, depth=int(depth))
+                    AnonFiles(db).upload(filename=item)
+                    BayFiles(db).upload(filename=item)
+                    ForumFiles(db).upload(filename=item)
             except Exception as e:
                 p(e, f"{item} failed to upload")
         else:
@@ -35,7 +40,7 @@ class AFBFFF(object):
             if os.path.isdir(item):
                 cmd.append("-r")
             p(f"[Zipping] {item}", cmd)
-            process = subprocess.Popen(cmd)
+            process = subprocess.Popen(cmd, stderr=None, stdout=None)
             process.communicate()
             files = [join_path(temp_dir, temp, file) for file in os.listdir(join_path(temp_dir, temp))]
             p(f"[Zipped] {item} has {len(files)} parts")
