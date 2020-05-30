@@ -21,6 +21,7 @@ class AFBFFF(object):
             db = join_path(abs_main_dir(2), db)
         if not os.path.isabs(item):
             item = join_path(abs_main_dir(2), item)
+        print(f"[Started] {item}", flush=True)
         if os.path.isfile(item) and not split:
             try:
                 if not mirror:
@@ -39,12 +40,13 @@ class AFBFFF(object):
             if os.path.isdir(item):
                 cmd.append("-r")
             p(f"[Zipping] {item}", cmd)
-            process = subprocess.Popen(cmd, stderr=None, stdout=None)
+            process = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
             process.communicate()
             files = [join_path(temp_dir, temp, file) for file in os.listdir(join_path(temp_dir, temp))]
-            p(f"[Zipped] {item} has {len(files)} parts")
+            p(f"[Zipped] {item} has {len(files)} parts", files)
             for file in files:
                 AFBFFF(file, db=db, host=host, mirror=mirror)
+        print(f"[Ended] {item}", flush=True)
 
 
 
