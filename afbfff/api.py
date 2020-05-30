@@ -37,7 +37,7 @@ class BaseFiles(object):
                 sqlqueue.sql(sql, data)
                 sqlqueue.commit()
                 sqlqueue.stop()
-                print(" "*self._depth*4+f"\r[Uploaded] {filename} ==> {url_short}", flush=True)
+                print("\r"+" "*self._depth*4+f"[Uploaded] {filename} ==> {url_short}", flush=True)
 
 
 class AnonFiles(BaseFiles):
