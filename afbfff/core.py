@@ -8,7 +8,7 @@ class AFBFFF(object):
                  split: bool = False, split_size: int = 1024*1024*4000,
                  host: str = "AnonFiles", mirror: bool = False):
         if not os.path.isabs(item):
-            item = join_path(abs_main_dir(3), item)
+            item = join_path(abs_main_dir(2), item)
         if os.path.isfile(item):
             if not split:
                 if not mirror:
