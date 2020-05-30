@@ -14,8 +14,7 @@ class AFBFFF(object):
                  split: bool = False, split_size: int = 1024*4000,
                  host: str = "AnonFiles", mirror: bool = False,
                  _7z_exe: str = r"C:\Program Files\7-Zip\7z.exe",
-                 temp_dir: str = r"I:\test",
-                 depth: int = 4):
+                 temp_dir: str = r"I:\test"):
         if not temp_dir:
             temp_dir = os.environ["TEMP"]
         if not os.path.isabs(db):
@@ -45,7 +44,7 @@ class AFBFFF(object):
             files = [join_path(temp_dir, temp, file) for file in os.listdir(join_path(temp_dir, temp))]
             p(f"[Zipped] {item} has {len(files)} parts")
             for file in files:
-                AFBFFF(file, host=host, mirror=mirror, depth=depth+1)
+                AFBFFF(file, db=db, host=host, mirror=mirror)
 
 
 
