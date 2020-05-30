@@ -20,10 +20,10 @@ class AFBFFF(object):
                 raise e
         finally:
             sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100, depth=3)
-            sql = '''CREATE TABLE IF NOT EXISTS "history" ("_id" text, "path" text);'''
+            sql = '''CREATE TABLE IF NOT EXISTS "history" ("url" text, "path" text);'''
             sqlqueue.sql(sql)
             sql = '''INSERT INTO history VALUES (?, ?);'''
-            data = (response["data"]["file"]["metadata"]["id"], filename)
+            data = (response["data"]["file"]["url"]["short"], filename)
             sqlqueue.sql(sql, data)
             sqlqueue.commit()
             sqlqueue.stop()
