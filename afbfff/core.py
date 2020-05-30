@@ -1,5 +1,6 @@
 import requests
 import sqlq
+import time
 
 
 class AFBFFF(object):
@@ -10,23 +11,26 @@ class AFBFFF(object):
             raise Exception(type(self).__name__+" is an abstract class")
         self.url += f"?token="+token if token else ""
 
-    def upload(self, filename: str) -> None:
-        response = None
+    def upload(self, filename: str) -> dict:
         try:
+            issued = int(time.time())
+            response = None
             try:
                 response = requests.post(self.url, files={"file": open(filename, "rb")}).json()
                 return response
             except Exception as e:
                 raise e
-        finally:
+            uploaded = int(time.time())
             sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100, depth=3)
-            sql = '''CREATE TABLE IF NOT EXISTS "history" ("url" text, "path" text);'''
+            sql = '''CREATE TABLE IF NOT EXISTS "history" ("url" TEXT, "path" TEXT, "issued" INTEGER, "uploaded" INTEGER);'''
             sqlqueue.sql(sql)
-            sql = '''INSERT INTO history VALUES (?, ?);'''
+            sql = '''INSERT INTO history VALUES (?, ?, ?, ?);'''
             data = (response["data"]["file"]["url"]["short"], filename)
             sqlqueue.sql(sql, data)
             sqlqueue.commit()
             sqlqueue.stop()
+        except Exception as e:
+            raise e
 
 
 class AnonFiles(AFBFFF):
