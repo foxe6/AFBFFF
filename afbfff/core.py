@@ -35,7 +35,7 @@ def AFBFFF(item: str, db: str, big_item_split_parts: int = -1,
         basename = os.path.basename(item)+".zip"
         temp = randstr(2 ** 3)+"_"+str(int(time.time()))
         dest = join_path(temp_dir, temp, basename)
-        fs = file_size(item)
+        fs = file_size(item)+150
         if big_item_split_parts > 1 and fs >= (big_item_split_parts-1)**2+1:
             import math
             split_size = math.ceil(fs/big_item_split_parts)
