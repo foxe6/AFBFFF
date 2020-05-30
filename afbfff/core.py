@@ -25,11 +25,11 @@ class AFBFFF(object):
         if os.path.isfile(item) and not split:
             try:
                 if not mirror:
-                    globals()[host](db, _depth=_depth+1).upload(filename=item)
+                    globals()[host](db, _depth=_depth).upload(filename=item)
                 else:
-                    AnonFiles(db, _depth=_depth+1).upload(filename=item)
-                    BayFiles(db, _depth=_depth+1).upload(filename=item)
-                    ForumFiles(db, _depth=_depth+1).upload(filename=item)
+                    AnonFiles(db, _depth=_depth).upload(filename=item)
+                    BayFiles(db, _depth=_depth).upload(filename=item)
+                    ForumFiles(db, _depth=_depth).upload(filename=item)
             except Exception as e:
                 p(e, f"{item} failed to upload")
         else:
