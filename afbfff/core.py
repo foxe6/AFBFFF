@@ -19,7 +19,7 @@ class AFBFFF(object):
             except Exception as e:
                 raise e
         finally:
-            sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100)
+            sqlqueue = sqlq.SqlQueue(server=True, db="db.db", timeout_commit=100, depth=3)
             sql = '''CREATE TABLE "history" IF NOT EXISTS ("_id" text, "path" text);'''
             sqlqueue.sql(sql)
             sql = '''INSERT INTO history VALUES (?, ?);'''
