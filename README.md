@@ -38,7 +38,7 @@ AFBFFF(
     # see next example for `split_size` usage
     big_item_split_parts=8,
     # specify a remote host from one of the following
-    # `host` is ignored when `mirror` is specified
+    # `host` is ignored when `mirror` is `True`
     # "AnonFiles", "BayFiles", "ForumFiles"
     host="AnonFiles",
     # whether to upload to all remote hosts
@@ -57,12 +57,11 @@ AFBFFF(
     db="db.db",
     # whether to split the item
     # `split` is ignored when item is a folder
-    split=False,
+    split=True,
     # split the item when it exceeds the specified size
     # size in bytes 
     split_size=1024*1024*4000,
-    host="AnonFiles",
-    mirror=False,
+    mirror=True,
     _7z_exe=r"C:\Program Files\7-Zip\7z.exe",
     temp_dir=r"I:\test",
     _depth=0
