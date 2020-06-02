@@ -33,7 +33,7 @@ def AFBFFF(item: str, db: str, big_item_split_parts: int = -1,
             basename = os.path.basename(item)+".zip"
             temp = randstr(2 ** 3)+"_"+str(int(time.time()))
             dest = join_path(temp_dir, temp, basename)
-            fs = file_size(item)+150
+            fs = file_size(item)
             if big_item_split_parts > 1:
                 if fs >= (big_item_split_parts-1)**2+1:
                     import math
@@ -51,7 +51,7 @@ def AFBFFF(item: str, db: str, big_item_split_parts: int = -1,
             for file in files:
                 AFBFFF(file, db=db, host=host, mirror=mirror, _depth=_depth+1)
     except Exception as e:
-        p(e, f"{item} failed to upload")
+        raise Exception(f"{item} failed to upload", e)
     print(" "*_depth*4+f"[Ended] {item}", flush=True)
 
 
