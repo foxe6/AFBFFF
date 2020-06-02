@@ -18,8 +18,8 @@ open("README.md", "wb").write(readme.encode("utf-8"))
 description = re.search(r"<i>(.*?)</i>", readme)[1]
 setup(
     name="afbfff",
-    version="0.1.0",
-    keywords=["anonfiles bayfiles forumfiles"],
+    version="0.1.1",
+    keywords=["anonfiles bayfiles forumfiles upload"],
     packages=find_packages(),
     url="https://github.com/foxe6/afbfff",
     license="AGPL-3.0",

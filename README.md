@@ -14,17 +14,23 @@
 
 ```
 afbfff
-|---- AnonFiles()
-|   '---- upload()
-|---- BayFiles()
-|   '---- upload()
-'---- ForumFiles()
-    '---- upload()
+'---- AFBFFF()
 ```
 
 # Example
 
 ## python
 ```python
-
+from afbfff import *
+AFBFFF(
+    item: str,
+    db: str,
+    big_item_split_parts: int = -1,
+    split: bool = False,
+    split_size: int = 1024*1024*4000,
+    host: str = "AnonFiles",
+    mirror: bool = False,
+    _7z_exe: str = r"C:\Program Files\7-Zip\7z.exe",
+    temp_dir: str = r"I:\test", _depth: int = 0
+)
 ```

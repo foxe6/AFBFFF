@@ -1,5 +1,5 @@
-__version__ = "0.1.0"
-__keywords__ = ["anonfiles bayfiles forumfiles"]
+__version__ = "0.1.1"
+__keywords__ = ["anonfiles bayfiles forumfiles upload"]
 
 
 if not __version__.endswith(".0"):
