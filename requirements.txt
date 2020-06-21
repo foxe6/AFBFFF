@@ -1,3 +1,4 @@
 requests==2.23.0
 sqlq>=0.0.1
 omnitools>=0.0.1
+filehandling>=0.0.1
